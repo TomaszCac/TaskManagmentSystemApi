@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskManagmentSystemApiProject.Dto;
 using TaskManagmentSystemApiProject.Interfaces;
+using TaskManagmentSystemApiProject.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,9 +22,9 @@ namespace TaskManagmentSystemApiProject.Controllers
         }
         // GET: api/tasks
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get([FromQuery] Status? status, [FromQuery] Priority? priority, [FromQuery] int? assignedTo)
         {
-            return Ok(_mapper.Map<List<TaskDto>>(_taskrepos.GetAllTasks()));
+            return Ok(_mapper.Map<List<TaskDto>>(_taskrepos.GetAllTasks(status, priority, assignedTo)));
         }
 
         // GET api/tasks/5

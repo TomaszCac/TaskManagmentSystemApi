@@ -1,5 +1,6 @@
 ﻿using TaskManagmentSystemApiProject.Data;
 using TaskManagmentSystemApiProject.Interfaces;
+using TaskManagmentSystemApiProject.Models;
 
 namespace TaskManagmentSystemApiProject.Repositories
 {
@@ -33,9 +34,15 @@ namespace TaskManagmentSystemApiProject.Repositories
             return false;
         }
 
-        public ICollection<Models.Task> GetAllTasks()
+        public ICollection<Models.Task> GetAllTasks(Status? status, Priority? priority, int? assignedTo)
         {
-            var entities = _context.Tasks.ToList();
+            //  if(status != null)
+            //  {
+            //     var entities = _context.Tasks.Where(t => t.Status == status).ToList();
+            //  }
+            var entities = _context.Tasks.Where(status != null ? (t => t.Status == status) : (t => t.Status == t.Status))
+                    .Where(priority != null ? (t => t.Priority == priority) : (t => t.Priority == t.Priority))
+                    .Where(assignedTo != null ? (t => t.AssignedTo.Id == assignedTo) : (t => t.AssignedTo.Id == t.AssignedTo.Id)).ToList();
             foreach (var entity in entities)
             {
                 var userCreated = _context.Tasks.Where(t => t.Id == entity.Id).Select(t => t.CreatedBy).FirstOrDefault();
