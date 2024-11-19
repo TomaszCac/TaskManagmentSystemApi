@@ -13,7 +13,7 @@ namespace TaskManagmentSystemApiProject.Helper
             CreateMap<Comment, CommentDto>();
             CreateMap<User, UserDto>();
             CreateMap<Models.Task, TaskDto>().ConvertUsing(new TaskConverter());
-            CreateMap<CommentDto, Comment>();
+            CreateMap<CommentDto, Comment>().ConvertUsing(new CommentConverter());
             CreateMap<UserDto, User>().ConvertUsing(new UserDtoConverter());
             CreateMap<TaskDto, Models.Task>().ConvertUsing(new TaskDtoConverter());
         }
@@ -67,6 +67,31 @@ namespace TaskManagmentSystemApiProject.Helper
             dto.CreatedAt = source.CreatedAt;
             dto.UpdatedAt = source.UpdatedAt;
             return dto;
+        }
+    }
+    public class CommentConverter : ITypeConverter<CommentDto, Comment>
+    {
+        public Comment Convert(CommentDto source, Comment destination, ResolutionContext context)
+        {
+            Comment comment = new Comment(){ Task = new Models.Task() };
+            comment.CreatedBy = new User();
+            comment.CreatedBy.Id = source.CreatedById;
+            comment.CreatedAt = source.CreatedAt;
+            comment.Text = source.Text;
+            return comment;
+        }
+    }
+    public class CommentDtoConverter : ITypeConverter<Comment, CommentDto>
+    {
+        public CommentDto Convert(Comment source, CommentDto destination, ResolutionContext context)
+        {
+            CommentDto comment = new CommentDto();
+            comment.Id = source.Id;
+            comment.CreatedById = source.CreatedBy.Id;
+            comment.TaskId = source.Task.Id;
+            comment.CreatedAt = source.CreatedAt;
+            comment.Text = source.Text;
+            return comment;
         }
     }
 }

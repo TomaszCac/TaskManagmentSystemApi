@@ -6,7 +6,7 @@ namespace TaskManagmentSystemApiProject.Dto
     {
         public int Id { get; set; }
 
-        public required int TaskId { get; set; }
+        public int TaskId { get; set; }
 
         public int CreatedById { get; set; }
 
