@@ -1,8 +1,9 @@
 ﻿using TaskManagmentSystemApiProject.Data;
+using TaskManagmentSystemApiProject.Interfaces;
 
 namespace TaskManagmentSystemApiProject.Repositories
 {
-    public class CommentRepository
+    public class CommentRepository : ICommentRepository
     {
         private readonly TaskDatabaseContext _context;
 

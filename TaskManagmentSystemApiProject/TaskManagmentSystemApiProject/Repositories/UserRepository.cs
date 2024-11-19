@@ -1,8 +1,9 @@
 ﻿using TaskManagmentSystemApiProject.Data;
+using TaskManagmentSystemApiProject.Interfaces;
 
 namespace TaskManagmentSystemApiProject.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly TaskDatabaseContext _context;
 

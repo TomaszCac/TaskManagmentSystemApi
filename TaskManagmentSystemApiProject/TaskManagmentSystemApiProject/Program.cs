@@ -1,11 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManagmentSystemApiProject.Data;
+using TaskManagmentSystemApiProject.Interfaces;
+using TaskManagmentSystemApiProject.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 
 builder.Services.AddCors((options) =>
 {
