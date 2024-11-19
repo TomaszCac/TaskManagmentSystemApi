@@ -26,8 +26,9 @@ namespace TaskManagmentSystemApiProject.Repositories
             if (user != null)
             {
                 _context.Users.Remove(user);
+                return Save();
             }
-            return Save();
+            return false;
         }
 
         public ICollection<User> GetAllUsers()
