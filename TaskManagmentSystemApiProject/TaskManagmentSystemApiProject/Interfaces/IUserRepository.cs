@@ -14,5 +14,6 @@ namespace TaskManagmentSystemApiProject.Interfaces
         public bool VerifyPassword(UserDto user);
         public bool VerifyEmail(string email);
         public string CreateToken(UserDto user);
+        public User? GetUserByEmail(string email);
     }
 }

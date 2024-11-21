@@ -66,6 +66,11 @@ namespace TaskManagmentSystemApiProject.Repositories
             return _context.Users.Where(e => e.Id == id).FirstOrDefault();
         }
 
+        public User? GetUserByEmail(string email)
+        {
+            return _context.Users.Where(e => e.Email == email).FirstOrDefault();
+        }
+
         public bool Save()
         {
             var saved = _context.SaveChanges();

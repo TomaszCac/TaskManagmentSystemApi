@@ -38,6 +38,14 @@ namespace TaskManagmentSystemApiProject.Repositories
             return false;
         }
 
+        public Comment GetComment(int id)
+        {
+            var commentEntity = _context.Comments.Where(c => c.Id == id).FirstOrDefault();
+            var userEntity = _context.Comments.Where(c => c.Id == id).Select(c => c.CreatedBy).FirstOrDefault();
+            commentEntity.CreatedBy = userEntity;
+            return commentEntity;
+        }
+
         public ICollection<Comment> GetCommentsToTask(int id)
         {
             var entities = _context.Comments.Where(b => b.Task.Id == id).ToList();

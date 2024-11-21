@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagmentSystemApiProject.Dto;
 using TaskManagmentSystemApiProject.Interfaces;
@@ -16,6 +17,7 @@ namespace TaskManagmentSystemApiProject.Controllers
     {
         private readonly IUserRepository _userrepos;
         private readonly IMapper _mapper;
+        private readonly IUserService _service;
 
         public UserController(IUserRepository userrepos, IMapper mapper, IUserService service)
         {
@@ -32,6 +34,7 @@ namespace TaskManagmentSystemApiProject.Controllers
 
         // GET api/users/5
         [HttpGet("{id}")]
+        [Authorize]
         public IActionResult GetUserById(int id)
         {
             return Ok(_mapper.Map<UserDto>(_userrepos.GetUser(id)));
@@ -43,7 +46,7 @@ namespace TaskManagmentSystemApiProject.Controllers
         {
             if (user == null)
             {
-                ModelState.AddModelError("", "User data has not been sent");
+                ModelState.AddModelError("", "Data has not been sent");
                 return BadRequest(ModelState);
             }
             var userMap = _mapper.Map<User>(user);
@@ -64,6 +67,11 @@ namespace TaskManagmentSystemApiProject.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] UserDto request)
         {
+            if (request == null)
+            {
+                ModelState.AddModelError("", "Data has not been sent");
+                return BadRequest(ModelState);
+            }
             if (!_userrepos.VerifyEmail(request.Email))
             {
                 ModelState.AddModelError("", "This user doesn't exist");
@@ -79,16 +87,34 @@ namespace TaskManagmentSystemApiProject.Controllers
 
         // PUT api/users/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult UpdateUserById(int id, [FromBody] UserDto user)
         {
-            return Ok(_userrepos.UpdateUser(id,_mapper.Map<User>(user)));
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Data has not been sent");
+                return BadRequest(ModelState);
+            }
+            if (_userrepos.GetUserByEmail(_service.GetEmail()) == _userrepos.GetUser(id) || _service.GetRole() == "Admin")
+            {
+                return Ok(_userrepos.UpdateUser(id, _mapper.Map<User>(user)));
+            }
+            ModelState.AddModelError("", "You don't have permission to do that");
+            return StatusCode(403, ModelState);
         }
 
         // DELETE api/users/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult Delete(int id)
         {
-            return Ok(_userrepos.DeleteUser(id));
+            if (_userrepos.GetUserByEmail(_service.GetEmail()) == _userrepos.GetUser(id) || _service.GetRole() == "Admin")
+            {
+                return Ok(_userrepos.DeleteUser(id));
+            }
+            ModelState.AddModelError("", "You don't have permission to do that");
+            return StatusCode(403, ModelState);
+            
         }
     }
 }
