@@ -26,8 +26,12 @@ namespace TaskManagmentSystemApiProject.Helper
             User user = new User();
             user.FirstName = source.FirstName;
             user.LastName = source.LastName;
+            using (var hmac = new HMACSHA512())
+            {
+                user.PasswordSalt = hmac.Key;
+                user.PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(source.PasswordHash));
+            }
             user.Email = source.Email;
-            user.PasswordHash = source.PasswordHash;
             user.Role = 0;
             return user;
         }
