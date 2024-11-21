@@ -20,12 +20,6 @@ namespace TaskManagmentSystemApiProject.Controllers
             _userrepos = userrepos;
             _mapper = mapper;
         }
-        // GET: api/users
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
 
         // GET api/users/5
         [HttpGet("{id}")]
