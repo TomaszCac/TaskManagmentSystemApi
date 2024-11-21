@@ -11,7 +11,7 @@ namespace TaskManagmentSystemApiProject.Helper
         public MappingProfiles()
         {
             CreateMap<Comment, CommentDto>();
-            CreateMap<User, UserDto>();
+            CreateMap<User, UserDto>().ConvertUsing(new UserConverter());
             CreateMap<Models.Task, TaskDto>().ConvertUsing(new TaskConverter());
             CreateMap<CommentDto, Comment>().ConvertUsing(new CommentConverter());
             CreateMap<UserDto, User>().ConvertUsing(new UserDtoConverter());
@@ -26,10 +26,28 @@ namespace TaskManagmentSystemApiProject.Helper
             User user = new User();
             user.FirstName = source.FirstName;
             user.LastName = source.LastName;
+            using (var hmac = new HMACSHA512())
+            {
+                user.PasswordSalt = hmac.Key;
+                user.PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(source.PasswordHash));
+            }
             user.Email = source.Email;
-            user.PasswordHash = source.PasswordHash;
-            user.Role = 0;
+            user.Role = Role.User;
             return user;
+        }
+    }
+    public class UserConverter : ITypeConverter<User, UserDto>
+    {
+        public UserDto Convert(User source, UserDto destination, ResolutionContext context)
+        {
+            UserDto dto = new UserDto();
+            dto.FirstName = source.FirstName;
+            dto.LastName = source.LastName;
+            dto.Email = source.Email;
+            dto.Role = source.Role;
+            dto.PasswordHash = "";
+            dto.Id = source.Id;
+            return dto;
         }
     }
     public class TaskDtoConverter : ITypeConverter<TaskDto, Models.Task>

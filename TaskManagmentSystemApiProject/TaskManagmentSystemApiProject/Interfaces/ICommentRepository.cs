@@ -8,5 +8,6 @@ namespace TaskManagmentSystemApiProject.Interfaces
         public bool CreateComment(int id, Comment comment);
         public bool DeleteComment(int id);
         public ICollection<Comment> GetCommentsToTask(int id);
+        public Comment GetComment(int id);
     }
 }
