@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagmentSystemApiProject.Dto;
 using TaskManagmentSystemApiProject.Interfaces;
@@ -38,14 +39,40 @@ namespace TaskManagmentSystemApiProject.Controllers
         [HttpPost]
         public IActionResult Register([FromBody] UserDto user)
         {
-            return Ok(_userrepos.CreateUser(_mapper.Map<User>(user)));
+            if (user == null)
+            {
+                ModelState.AddModelError("", "User data has not been sent");
+                return BadRequest(ModelState);
+            }
+            var userMap = _mapper.Map<User>(user);
+            if (_userrepos.VerifyEmail(userMap.Email))
+            {
+                ModelState.AddModelError("", "This email is taken");
+                return StatusCode(409, ModelState);
+            }
+            if (!_userrepos.CreateUser(userMap))
+            {
+                ModelState.AddModelError("", "Something went wrong");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("User has been created");
         }
 
         //POST api/users/login
         [HttpPost("login")]
-        public IActionResult Login()
+        public IActionResult Login([FromBody] UserDto request)
         {
-            return Ok();
+            if (!_userrepos.VerifyEmail(request.Email))
+            {
+                ModelState.AddModelError("", "This user doesn't exist");
+                return BadRequest(ModelState);
+            }
+            if (!_userrepos.VerifyPassword(request))
+            {
+                ModelState.AddModelError("", "Wrong password");
+                return BadRequest(ModelState);
+            }
+            return Ok(_userrepos.CreateToken(request));
         }
 
         // PUT api/users/5

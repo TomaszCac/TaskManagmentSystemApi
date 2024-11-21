@@ -32,7 +32,7 @@ namespace TaskManagmentSystemApiProject.Helper
                 user.PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(source.PasswordHash));
             }
             user.Email = source.Email;
-            user.Role = 0;
+            user.Role = Role.User;
             return user;
         }
     }

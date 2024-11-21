@@ -11,5 +11,8 @@ namespace TaskManagmentSystemApiProject.Interfaces
         public User? GetUser(int id);
         public bool UpdateUser(int id, User user);
         public bool DeleteUser(int id);
+        public bool VerifyPassword(UserDto user);
+        public bool VerifyEmail(string email);
+        public string CreateToken(UserDto user);
     }
 }
