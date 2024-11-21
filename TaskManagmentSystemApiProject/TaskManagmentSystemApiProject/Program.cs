@@ -5,6 +5,7 @@ using System.Text;
 using TaskManagmentSystemApiProject.Data;
 using TaskManagmentSystemApiProject.Interfaces;
 using TaskManagmentSystemApiProject.Repositories;
+using TaskManagmentSystemApiProject.Services.UserServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddHttpContextAccessor();
 
 

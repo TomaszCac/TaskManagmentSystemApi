@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TaskManagmentSystemApiProject.Dto;
 using TaskManagmentSystemApiProject.Interfaces;
 using TaskManagmentSystemApiProject.Models;
+using TaskManagmentSystemApiProject.Services.UserServices;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,10 +17,11 @@ namespace TaskManagmentSystemApiProject.Controllers
         private readonly IUserRepository _userrepos;
         private readonly IMapper _mapper;
 
-        public UserController(IUserRepository userrepos, IMapper mapper)
+        public UserController(IUserRepository userrepos, IMapper mapper, IUserService service)
         {
             _userrepos = userrepos;
             _mapper = mapper;
+            _service = service;
         }
         // GET: api/users
         [HttpGet]
